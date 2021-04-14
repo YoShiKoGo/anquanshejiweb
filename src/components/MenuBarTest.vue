@@ -1,16 +1,35 @@
-<!--
 <template>
-  <div>
-    <el-menu class="menu-bar" default-active="$route.path" unique-opened router>
-      <menu-item :menuList='menuList'></menu-item>
-    </el-menu>
-  </div>
+  <el-container>
+    <!-- 左侧菜单开始 -->
+    <el-aside width="auto">
+      <el-menu
+          default-active=""
+          class="menu-bar"
+          @open="handleOpen"
+          @close="handleClose"
+          :collapse="isCollapse"
+      >
+        <MenuItemTest :menuList="menuList"></MenuItemTest>
+      </el-menu>
+    </el-aside>
+    <!--左侧菜单结束 -->
+    <!-- 右侧内容显示区 -->
+    <el-container style="background:red">
+      <el-main style='background:#FFF;'>Main</el-main>
+      <el-footer>Footer</el-footer>
+    </el-container>
+  </el-container>
 </template>
+
 <script>
-import MenuItem from "./MenuItem";
+// eslint-disable-next-line no-unused-vars
+import MenuItemTest from "@/components/MenuItemTest";
+
 export default {
+  name: "MenuBarTest",
   components: {
-    MenuItem
+    // eslint-disable-next-line vue/no-unused-components
+    MenuItemTest
   },
   data() {
     return {
@@ -194,13 +213,22 @@ export default {
       ]
     };
   }
-};
+}
 </script>
-<style lang="css" scoped>
+
+<style scoped>
+
 /* 此样式用于设置 el-aside width="auto" 宽度为auto的样式 */
-.menu-bar:not(.el-menu&#45;&#45;collapse) {
+.menu-bar:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
 }
+
+.el-menu {
+  border-right: none !important;
+}
+
+.el-aside {
+  border-right: solid 1px #e6e6e6;
+}
 </style>
--->

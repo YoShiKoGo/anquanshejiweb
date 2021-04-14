@@ -1,3 +1,4 @@
+<!--
 <template>
   <div>
     <template v-for="menu in menuList">
@@ -9,10 +10,10 @@
 </span>
         </template>
         <menu-item :menuList='menu.children' />
-        <!-- <el-submenu index="1-4">
+        &lt;!&ndash; <el-submenu index="1-4">
         <span slot="title">选项4</span>
         <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu> -->
+        </el-submenu> &ndash;&gt;
       </el-submenu>
       <el-menu-item @click="selectMenu(menu)" v-else :index="menu.path"
                     :key='menu.path'>
@@ -48,4 +49,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-</style>
+</style>-->
