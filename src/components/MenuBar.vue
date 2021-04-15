@@ -19,7 +19,7 @@ export default {
           children: [
             {
               children: [],
-              code: "sys:dept",
+              code: "company:dept",
               createTime: 1586703509000,
               icon: "el-icon-copy-document",
               id: 33,
@@ -36,7 +36,7 @@ export default {
             },
             {
               children: [],
-              code: "sys:user",
+              code: "company:user",
               createTime: 1691464271000,
               icon: "el-icon-s-custom",
               id: 18,
@@ -52,7 +52,7 @@ export default {
             },
             {
               children: [],
-              code: "sys:role",
+              code: "company:role",
               createTime: 1691464271000,
               icon: "el-icon-rank",
               id: 23,
@@ -68,7 +68,7 @@ export default {
             },
             {
               children: [],
-              code: "sys:menu",
+              code: "company:menu",
               createTime: 1691464271000,
               icon: "el-icon-menu",
               id: 28,
@@ -83,7 +83,7 @@ export default {
               url: "/system/Menu/MenuList"
             }
           ],
-          code: "sys:manage",
+          code: "company:manage",
           createTime: 1691464271000,
           icon: "el-icon-document",
           id: 17,
@@ -99,7 +99,7 @@ export default {
           children: [
             {
               children: [],
-              code: "sys:goodsCategory",
+              code: "company:goodsCategory",
               createTime: 1586703272000,
               icon: "el-icon-s-data",
               id: 36,
@@ -115,7 +115,7 @@ export default {
             },
             {
               children: [],
-              code: "sys:goodsBrand",
+              code: "company:goodsBrand",
               createTime: 1586683924000,
               icon: "el-icon-tickets",
               id: 37,
@@ -130,7 +130,7 @@ export default {
               url: "/goods/goodsBrand/goodsBrandList"
             }
           ],
-          code: "sys:goods",
+          code: "company:goods",
           createTime: 1586702987000,
           icon: "el-icon-picture",
           id: 34,
@@ -147,7 +147,7 @@ export default {
           children: [
             {
               children: [],
-              code: "sys:systemCode",
+              code: "company:systemCode",
               createTime: 1587012282000,
               icon: "el-icon-files",
               id: 43,
@@ -163,7 +163,7 @@ export default {
             },
             {
               children: [],
-              code: "sys:document",
+              code: "company:document",
               createTime: 1586748705000,
               icon: "el-icon-s-operation",
               id: 77,
@@ -178,7 +178,7 @@ export default {
               url: "/system/config/systemDocument"
             }
           ],
-          code: "sys:systenConfig",
+          code: "company:systenConfig",
           createTime: 1586703003000,
           icon: "el-icon-receiving",
           id: 42,

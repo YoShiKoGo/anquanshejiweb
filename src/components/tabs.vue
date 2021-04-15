@@ -1,70 +1,88 @@
 <template>
   <div>
-    <el-tabs :value="editableTabsValue" type="card" closable @tab-remove="removeTab">
+    <el-tabs :value="editableTabsValue" type="card"  closable @tab-click="tabClick" @tab-remove="removeTab">
       <el-tab-pane
           v-for="item in editableTabs"
           :key="item.name"
           :label="item.title"
           :name="item.name"
-      >{{item.content}}</el-tab-pane>
+      >{{ item.content }}
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
+
 <script>
-// import {mapState} from 'vuex'
+// eslint-disable-next-line no-unused-vars
+import {mapState} from 'vuex'
+// eslint-disable-next-line no-unused-vars
+import store from "@/store";
+
 export default {
   name: "tabs",
-  computed:{
-// ...mapState({
-// //此处报 Computed property "editableTabs" was assigned to but it has no
-// //需要把v-model改为 :value即可
-// editableTabs: state => state.MenuStore.tabs
-// }),
-    editableTabs:({
-      get(){
-        return this.$store.state.MenuStore.tabs
+  computed: {
+    //   ...mapState({
+    //       //tabs选项卡数据
+    //       editableTabs: state => state.MenuStore.tabs,
+    //       //当前激活的选项卡
+    //     //   editableTabsValue: state => state.MenuStore.editableTabsValue
+    //   }),
+    //当前激活的选项卡
+    editableTabsValue: {
+      get() {
+        return this.$store.state.MenuStore.editableTabsValue;
       },
-      set(val){
-        this.$store.state.MenuStore.tabs = val;
-      }
-    }),
-    editableTabsValue:{
-      get(){
-        return this.$store.state.MenuStore.editableTabsValue
-      },
-      set(val){
+      set(val) {
         this.$store.state.MenuStore.editableTabsValue = val;
+      }
+    },
+    //tabs选项卡数据
+    editableTabs: {
+      get() {
+        return this.$store.state.MenuStore.tabs;
+      },
+      set(val) {
+        this.$store.state.MenuStore.tabs = val;
       }
     }
   },
   data() {
-    return {
-//选项卡的name
-// editableTabsValue: "2",
-// editableTabs: [
-// {
-// title: "Tab 1",
-// name: "1",
-// content: "Tab 1 content"
-// },
-// {
-// title: "Tab 2",
-// name: "2",
-// content: "Tab 2 content"
-// }
-// ],
-      tabIndex: 2
-    };
+    return {};
   },
   methods: {
-//关闭tabs targetName为关闭选项卡的名称
+    // eslint-disable-next-line no-unused-vars
+    addTab(targetName) {
+      let newTabName = ++this.tabIndex + '';
+      this.editableTabs.push({
+        title: 'New Tab',
+        name: newTabName,
+        content: 'New Tab content'
+      });
+      this.editableTabsValue = newTabName;
+    },
+
+    //点击tab事件
+    tabClick(tab) {
+      console.log(tab);
+      //组装tabs数据
+      let obj = {};
+      if (tab.name === "desktop") {
+        obj.title = "首页";
+      } else {
+        obj.title = tab.label;
+      }
+      obj.name = tab.name;
+      //设置tabs数据
+      this.$store.commit("selectMenu", obj);
+      //显示路由
+      this.$router.push({ name: tab.name });
+    },
+    //关闭tab方法
     removeTab(targetName) {
-//首页不能关闭
-      if(targetName === 'desktop'){
+      if (targetName === 'desktop') {
         return;
       }
       let tabs = this.editableTabs;
-//当前激活的选项卡
       let activeName = this.editableTabsValue;
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
@@ -76,10 +94,17 @@ export default {
           }
         });
       }
-//当前激活的选项卡
+
+      //当前激活的选项卡
       this.editableTabsValue = activeName;
-//路由跳到当前激活的选项卡
+      //路由跳到当前激活的选项卡
       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+      //存储当前打开的选项卡
+      sessionStorage.setItem('tabsList',JSON.stringify(this.editableTabs));
+      //设置激活选项卡
+      this.$store.commit('setActiveTabs',this.editableTabsValue);
+      //显示路由
+      this.$router.push({ name: this.editableTabsValue });
     }
   }
 };

@@ -20,17 +20,34 @@
       </div>
     </el-header>
     <!-- 头部结束 -->
+    <!--侧边栏-->
+    <el-container>
+    <el-aside width="auto">
     <menu-bar-test></menu-bar-test>
+    </el-aside>
+<!--选项卡，主界面      -->
+    <el-container>
+      <el-main  style='padding: 0'>
+        <tabs></tabs>
+        <router-view></router-view>
+      </el-main>
+      <!--      <el-footer>Footer</el-footer>-->
+    </el-container>
+    </el-container>
   </el-container>
 </template>
 <script>
 // eslint-disable-next-line no-unused-vars
 import MenuBarTest from "@/components/MenuBarTest";
+// eslint-disable-next-line no-unused-vars
+import tabs from "@/components/tabs";
 export default {
   name: "home",
   components: {
     // eslint-disable-next-line vue/no-unused-components
-    MenuBarTest
+    MenuBarTest,
+    // eslint-disable-next-line vue/no-unused-components
+    tabs
   }
 };
 </script>

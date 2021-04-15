@@ -8,7 +8,36 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    children:[
+      {
+        path: '/desktop',
+        name: 'desktop',
+        component:()=> import('../views/Desktop')
+      },
+      {
+        path: '/companyList',
+        name: 'CompanyList',
+        component: ()=>import('../views/system/company/CompanyList')
+      },
+      {
+        path: '/operatorList',
+        name: 'OperatorList',
+        component: ()=>import('../views/system/operator/OperatorList')
+      },
+      {
+        path: '/loginCount',
+        name: 'LoginCount',
+        component: ()=>import('../views/user/LoginCount')
+      },
+      {
+        path: '/logList',
+        name: 'LogList',
+        component: ()=>import('../views/log/LogList')
+      },
+    ]
+
+
   },
   {
     path: '/about',

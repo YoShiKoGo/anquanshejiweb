@@ -3,10 +3,8 @@
     <!-- 左侧菜单开始 -->
     <el-aside width="auto">
       <el-menu
-          default-active=""
+          :default-active="$route.path"
           class="menu-bar"
-          @open="handleOpen"
-          @close="handleClose"
           :collapse="isCollapse"
       >
         <MenuItemTest :menuList="menuList"></MenuItemTest>
@@ -14,95 +12,64 @@
     </el-aside>
     <!--左侧菜单结束 -->
     <!-- 右侧内容显示区 -->
-    <el-container style="background:red">
-      <el-main style='background:#FFF;'>Main</el-main>
-      <el-footer>Footer</el-footer>
-    </el-container>
+
+
   </el-container>
 </template>
 
 <script>
 // eslint-disable-next-line no-unused-vars
 import MenuItemTest from "@/components/MenuItemTest";
-
+// eslint-disable-next-line no-unused-vars
+import tabs from "@/components/tabs";
 export default {
   name: "MenuBarTest",
   components: {
     // eslint-disable-next-line vue/no-unused-components
-    MenuItemTest
+    MenuItemTest,
+    // eslint-disable-next-line vue/no-unused-components
+    tabs
   },
   data() {
     return {
+      isCollapse:false,
       menuList: [
         {
           children: [
             {
               children: [],
-              code: "sys:dept",
+              code: "company:dept",
               createTime: 1586703509000,
               icon: "el-icon-copy-document",
               id: 33,
               isHome: 0,
-              label: "机构管理",
-              name: "departmentList",
+              label: "公司平台管理",
+              name: "CompanyList",
               orderNum: 2,
               parentId: 17,
-              path: "/departmentList",
-              remark: "机构管理",
+              path: "/companyList",
               type: "1",
               updateTime: 1586337139000,
               url: "/system/Department/DepartmentList"
             },
             {
               children: [],
-              code: "sys:user",
+              code: "company:user",
               createTime: 1691464271000,
               icon: "el-icon-s-custom",
               id: 18,
               isHome: 0,
-              label: "用户管理",
-              name: "userList",
+              label: "平台操作员管理",
+              name: "OperatorList",
               orderNum: 3,
               parentId: 17,
-              path: "/userList",
+              path: "/operatorList",
               type: "1",
               updateTime: 1691565988000,
               url: "/system/User/UserList"
             },
-            {
-              children: [],
-              code: "sys:role",
-              createTime: 1691464271000,
-              icon: "el-icon-rank",
-              id: 23,
-              isHome: 0,
-              label: "角色管理",
-              name: "roleList",
-              orderNum: 4,
-              parentId: 17,
-              path: "/roleList",
-              type: "1",
-              updateTime: 1691565988000,
-              url: "/system/Role/RoleList"
-            },
-            {
-              children: [],
-              code: "sys:menu",
-              createTime: 1691464271000,
-              icon: "el-icon-menu",
-              id: 28,
-              isHome: 0,
-              label: "权限管理",
-              name: "menuList",
-              orderNum: 5,
-              parentId: 17,
-              path: "/menuList",
-              type: "1",
-              updateTime: 1691565988000,
-              url: "/system/Menu/MenuList"
-            }
           ],
-          code: "sys:manage",
+          code: "company:manage",
           createTime: 1691464271000,
           icon: "el-icon-document",
           id: 17,
@@ -118,43 +85,27 @@ export default {
           children: [
             {
               children: [],
-              code: "sys:goodsCategory",
+              code: "company:goodsCategory",
               createTime: 1586703272000,
               icon: "el-icon-s-data",
               id: 36,
               isHome: 0,
-              label: "分类管理",
-              name: "goodCategory",
+              label: "登录次数统计",
+              name: "LoginCount",
               orderNum: 1,
               parentId: 34,
-              path: "/goodCategory",
+              path: "/loginCount",
               type: "1",
               updateTime: 1586683590000,
               url: "/goods/goodsCategory/goodsCategoryList"
-            },
-            {
-              children: [],
-              code: "sys:goodsBrand",
-              createTime: 1586683924000,
-              icon: "el-icon-tickets",
-              id: 37,
-              isHome: 0,
-              label: "品牌管理",
-              name: "goodsBrand",
-              orderNum: 2,
-              parentId: 34,
-              path: "/goodsBrand",
-              type: "1",
-              updateTime: 1586683924000,
-              url: "/goods/goodsBrand/goodsBrandList"
             }
           ],
-          code: "sys:goods",
+          code: "company:goods",
           createTime: 1586702987000,
-          icon: "el-icon-picture",
+          icon: "el-icon-user",
           id: 34,
           isHome: 0,
-          label: "商品管理",
+          label: "用户管理",
           name: "",
           orderNum: 2,
           parentId: 0,
@@ -163,50 +114,17 @@ export default {
           updateTime: 1586683323000
         },
         {
-          children: [
-            {
-              children: [],
-              code: "sys:systemCode",
-              createTime: 1587012282000,
-              icon: "el-icon-files",
-              id: 43,
-              isHome: 0,
-              label: "代码生成",
-              name: "systemCode",
-              orderNum: 0,
-              parentId: 42,
-              path: "/systemCode",
-              type: "1",
-              updateTime: 1586684646000,
-              url: "/system/config/code"
-            },
-            {
-              children: [],
-              code: "sys:document",
-              createTime: 1586748705000,
-              icon: "el-icon-s-operation",
-              id: 77,
-              isHome: 0,
-              label: "接口文档",
-              name: "document",
-              orderNum: 0,
-              parentId: 42,
-              path: "/document",
-              type: "1",
-              updateTime: 1586748705000,
-              url: "/system/config/systemDocument"
-            }
-          ],
-          code: "sys:systenConfig",
+          children: "",
+          code: "company:systenConfig",
           createTime: 1586703003000,
           icon: "el-icon-receiving",
           id: 42,
           isHome: 0,
-          label: "系统工具",
-          name: "",
+          label: "日志管理",
+          name: "LogList",
           orderNum: 3,
           parentId: 0,
-          path: "/systenConfig",
+          path: "/logList",
           type: "0",
           updateTime: 1586684441000
         }

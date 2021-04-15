@@ -13,7 +13,7 @@
                <el-menu-item index="1-4-2">选项2</el-menu-item>
              </el-submenu>-->
       </el-submenu>
-      <el-menu-item v-else :index="menu.path" :key="menu.path">
+      <el-menu-item v-else @click="selectMenu(menu) " :index="menu.path" :key="menu.path">
         <i :class="menu.icon"></i>
         <span slot="title">{{ menu.label }}</span>
       </el-menu-item>
@@ -30,6 +30,15 @@ export default {
   props: ['menuList'],
   components: {
     MenuItemTest
+  },
+  methods:{
+    // eslint-disable-next-line no-unused-vars
+    selectMenu(item) {
+      //设置选项卡
+      this.$store.commit('selectMenu', item);
+      //设置路由
+      this.$router.push({name:item.name})
+    }
   }
 }
 </script>
