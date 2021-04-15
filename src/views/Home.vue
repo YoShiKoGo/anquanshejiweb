@@ -38,7 +38,7 @@
 </template>
 <script>
 // eslint-disable-next-line no-unused-vars
-import MenuBarTest from "@/components/MenuBarTest";
+import MenuBarTest from "@/components/MenuBar";
 // eslint-disable-next-line no-unused-vars
 import tabs from "@/components/tabs";
 export default {
