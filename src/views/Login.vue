@@ -48,7 +48,7 @@ export default {
       loginForm: {
         username: "",//用户名
         password: "",//密码
-        code:""//
+        code: ""//
       },
       //验证规则
       rules: {
@@ -84,15 +84,114 @@ export default {
 
       // 校验通过以后 掉接口 this.$refs.shop 和html中ref对应
       this.$refs.loginForm.validate(valid => {
-        if(valid){
-          console.log(valid);
-        //成功
-          // eslint-disable-next-line no-unused-vars
-          let menuList=[
-            {
-              children: [
+            if (valid) {
+              console.log(valid);
+              //成功
+              // eslint-disable-next-line no-unused-vars
+              let menuList = [
                 {
-                  children: [],
+                  children: [
+                    {
+                      children: [],
+                      code: "company:dept",
+                      createTime: 1586703509000,
+                      icon: "el-icon-copy-document",
+                      id: 33,
+                      isHome: 0,
+                      label: "公司平台管理",
+                      name: "CompanyList",
+                      orderNum: 2,
+                      parentId: 17,
+                      path: "/companyList",
+                      type: "1",
+                      updateTime: 1586337139000,
+                      url: "/system/company/CompanyList"
+                    },
+                    {
+                      children: [],
+                      code: "company:user",
+                      createTime: 1691464271000,
+                      icon: "el-icon-s-custom",
+                      id: 18,
+                      isHome: 0,
+                      label: "平台操作员管理",
+                      name: "OperatorList",
+                      orderNum: 3,
+                      parentId: 17,
+                      path: "/operatorList",
+                      type: "1",
+                      updateTime: 1691565988000,
+                      url: "/system/operator/OperatorList"
+                    },
+                  ],
+                  code: "company:manage",
+                  createTime: 1691464271000,
+                  icon: "el-icon-document",
+                  id: 17,
+                  isHome: 0,
+                  label: "系统管理",
+                  orderNum: 1,
+                  parentId: 0,
+                  path: "/system",
+                  type: "0",
+                  updateTime: 1691565988000
+                },
+                {
+                  children: [
+                    {
+                      children: [],
+                      code: "company:goodsCategory",
+                      createTime: 1586703272000,
+                      icon: "el-icon-s-data",
+                      id: 36,
+                      isHome: 0,
+                      label: "登录次数统计",
+                      name: "LoginCount",
+                      orderNum: 1,
+                      parentId: 34,
+                      path: "/loginCount",
+                      type: "1",
+                      updateTime: 1586683590000,
+                      url: "/user/LoginCount"
+                    }
+                  ],
+                  code: "company:goods",
+                  createTime: 1586702987000,
+                  icon: "el-icon-user",
+                  id: 34,
+                  isHome: 0,
+                  label: "用户管理",
+                  name: "",
+                  orderNum: 2,
+                  parentId: 0,
+                  path: "/goods",
+                  type: "0",
+                  updateTime: 1586683323000
+                },
+                {
+                  children: "",
+                  code: "company:systenConfig",
+                  createTime: 1586703003000,
+                  icon: "el-icon-receiving",
+                  id: 42,
+                  isHome: 0,
+                  label: "日志管理",
+                  name: "LogList",
+                  orderNum: 3,
+                  parentId: 0,
+                  path: "/logList",
+                  type: "0",
+                  url: 'log/LogList',
+                  updateTime: 1586684441000
+                }
+
+              ];
+
+              //登录成功返回的路由数据
+              // eslint-disable-next-line no-unused-vars
+              let routerList = [
+                {
+                  children: '',
                   code: "company:dept",
                   createTime: 1586703509000,
                   icon: "el-icon-copy-document",
@@ -105,10 +204,10 @@ export default {
                   path: "/companyList",
                   type: "1",
                   updateTime: 1586337139000,
-                  url: "/system/Department/DepartmentList"
+                  url: "/system/company/CompanyList"
                 },
                 {
-                  children: [],
+                  children: '',
                   code: "company:user",
                   createTime: 1691464271000,
                   icon: "el-icon-s-custom",
@@ -121,25 +220,10 @@ export default {
                   path: "/operatorList",
                   type: "1",
                   updateTime: 1691565988000,
-                  url: "/system/User/UserList"
+                  url: "/system/operator/OperatorList"
                 },
-              ],
-              code: "company:manage",
-              createTime: 1691464271000,
-              icon: "el-icon-document",
-              id: 17,
-              isHome: 0,
-              label: "系统管理",
-              orderNum: 1,
-              parentId: 0,
-              path: "/system",
-              type: "0",
-              updateTime: 1691565988000
-            },
-            {
-              children: [
                 {
-                  children: [],
+                  children: '',
                   code: "company:goodsCategory",
                   createTime: 1586703272000,
                   icon: "el-icon-s-data",
@@ -152,148 +236,44 @@ export default {
                   path: "/loginCount",
                   type: "1",
                   updateTime: 1586683590000,
-                  url: "/goods/goodsCategory/goodsCategoryList"
-                }
-              ],
-              code: "company:goods",
-              createTime: 1586702987000,
-              icon: "el-icon-user",
-              id: 34,
-              isHome: 0,
-              label: "用户管理",
-              name: "",
-              orderNum: 2,
-              parentId: 0,
-              path: "/goods",
-              type: "0",
-              updateTime: 1586683323000
-            },
-            {
-              children: "",
-              code: "company:systenConfig",
-              createTime: 1586703003000,
-              icon: "el-icon-receiving",
-              id: 42,
-              isHome: 0,
-              label: "日志管理",
-              name: "LogList",
-              orderNum: 3,
-              parentId: 0,
-              path: "/logList",
-              type: "0",
-              updateTime: 1586684441000
-            }
-
-          ];
-
-          //登录成功返回的路由数据
-          // eslint-disable-next-line no-unused-vars
-          let routerList=[
-            {
-              children: [
-                {
-                  children: [],
-                  code: "company:dept",
-                  createTime: 1586703509000,
-                  icon: "el-icon-copy-document",
-                  id: 33,
-                  isHome: 0,
-                  label: "公司平台管理",
-                  name: "CompanyList",
-                  orderNum: 2,
-                  parentId: 17,
-                  path: "/companyList",
-                  type: "1",
-                  updateTime: 1586337139000,
-                  url: "/system/Department/DepartmentList"
+                  url: "/user/LoginCount"
                 },
+
                 {
-                  children: [],
-                  code: "company:user",
-                  createTime: 1691464271000,
-                  icon: "el-icon-s-custom",
-                  id: 18,
+                  children: "",
+                  code: "company:systemConfig",
+                  createTime: 1586703003000,
+                  icon: "el-icon-receiving",
+                  id: 42,
                   isHome: 0,
-                  label: "平台操作员管理",
-                  name: "OperatorList",
+                  label: "日志管理",
+                  name: "LogList",
                   orderNum: 3,
-                  parentId: 17,
-                  path: "/operatorList",
-                  type: "1",
-                  updateTime: 1691565988000,
-                  url: "/system/User/UserList"
-                },
-              ],
-              code: "company:manage",
-              createTime: 1691464271000,
-              icon: "el-icon-document",
-              id: 17,
-              isHome: 0,
-              label: "系统管理",
-              orderNum: 1,
-              parentId: 0,
-              path: "/system",
-              type: "0",
-              updateTime: 1691565988000
-            },
-            {
-              children: [
-                {
-                  children: [],
-                  code: "company:goodsCategory",
-                  createTime: 1586703272000,
-                  icon: "el-icon-s-data",
-                  id: 36,
-                  isHome: 0,
-                  label: "登录次数统计",
-                  name: "LoginCount",
-                  orderNum: 1,
-                  parentId: 34,
-                  path: "/loginCount",
-                  type: "1",
-                  updateTime: 1586683590000,
-                  url: "/goods/goodsCategory/goodsCategoryList"
+                  parentId: 0,
+                  path: "/logList",
+                  url: "/log/LogList",
+                  type: "0",
+                  updateTime: 1586684441000
                 }
-              ],
-              code: "company:goods",
-              createTime: 1586702987000,
-              icon: "el-icon-user",
-              id: 34,
-              isHome: 0,
-              label: "用户管理",
-              name: "",
-              orderNum: 2,
-              parentId: 0,
-              path: "/goods",
-              type: "0",
-              updateTime: 1586683323000
-            },
-            {
-              children: "",
-              code: "company:systenConfig",
-              createTime: 1586703003000,
-              icon: "el-icon-receiving",
-              id: 42,
-              isHome: 0,
-              label: "日志管理",
-              name: "LogList",
-              orderNum: 3,
-              parentId: 0,
-              path: "/logList",
-              type: "0",
-              updateTime: 1586684441000
+              ];
+              //保存菜单数据
+              sessionStorage.setItem("menuList", JSON.stringify(menuList));
+              //保存路由数据
+              sessionStorage.setItem("routerList", JSON.stringify(routerList));
+              //动态生成路由
+              this.$store.commit("getMenuList", this.$router);
+              //登录成功后跳转的路由
+              this.$router.push({path: '/home'})
             }
-          ]
-          this.$router.push({path:'/'})
-        }
-      });
+          }
+      );
 
     },
+    //清除表单所有数据
     clearAll() {
-      this.loginForm.username='';
-      this.loginForm.password='';
-      this.loginForm.code='';
-
+      this.loginForm.username = '';
+      this.loginForm.password = '';
+      this.loginForm.code = '';
     }
 
   }

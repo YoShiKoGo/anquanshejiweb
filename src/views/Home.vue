@@ -23,7 +23,7 @@
     <!--侧边栏-->
     <el-container>
     <el-aside width="auto">
-    <menu-bar-test></menu-bar-test>
+    <menu-bar></menu-bar>
     </el-aside>
 <!--选项卡，主界面      -->
     <el-container>
@@ -38,14 +38,14 @@
 </template>
 <script>
 // eslint-disable-next-line no-unused-vars
-import MenuBarTest from "@/components/MenuBar";
+import MenuBar from "@/components/MenuBar";
 // eslint-disable-next-line no-unused-vars
 import tabs from "@/components/tabs";
 export default {
   name: "home",
   components: {
     // eslint-disable-next-line vue/no-unused-components
-    MenuBarTest,
+    MenuBar,
     // eslint-disable-next-line vue/no-unused-components
     tabs
   }
