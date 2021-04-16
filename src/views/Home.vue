@@ -14,8 +14,9 @@
           </el-dropdown>
         </div>
         <div class="header-right-user">
-          <div class="header-wollcom">欢迎你，管理员</div>
-          <div class="header-time">2021.4.14 12:55:20 星期三</div>
+          <div class="header-welcome">欢迎你，管理员</div>
+          <div class="header-time">2021.4.16</div>
+
         </div>
       </div>
     </el-header>
@@ -41,13 +42,17 @@
 import MenuBar from "@/components/MenuBar";
 // eslint-disable-next-line no-unused-vars
 import tabs from "@/components/tabs";
+// eslint-disable-next-line no-unused-vars
+import Time from "@/components/Time";
 export default {
   name: "home",
   components: {
     // eslint-disable-next-line vue/no-unused-components
     MenuBar,
     // eslint-disable-next-line vue/no-unused-components
-    tabs
+    tabs,
+    // eslint-disable-next-line vue/no-unused-components
+    Time
   }
 };
 </script>

@@ -20,6 +20,11 @@ const routes = [
         path: '/desktop',
         name: 'desktop',
         component:()=> import('../views/Desktop')
+      },
+      {
+        path: '/time',
+        name:'path',
+        component: () => import('../components/Time')
       }
      /* {
         path: '/companyList',
