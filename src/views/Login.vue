@@ -12,7 +12,7 @@
       <el-form-item prop="password" label="">
         <el-input v-model="loginForm.password" placeholder="输入密码"></el-input>
       </el-form-item>
-      <el-form-item prop="code" label="">
+<!--      <el-form-item prop="code" label="">
         <el-row :gutter="10">
           <el-col :span="16">
             <el-input v-model="loginForm.code" placeholder="请输入验证码"></el-input>
@@ -27,7 +27,7 @@
             ></el-input>
           </el-col>
         </el-row>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item>
         <el-row :gutter="20">
           <el-col :span="12">
@@ -39,6 +39,7 @@
         </el-row>
       </el-form-item>
     </el-form>
+
   </div>
 </template>
 <script>
@@ -65,27 +66,27 @@ export default {
             trigger: "change",
             message: "请输入密码"
           }
-        ],
-        code: [
-          {
-            required: true,
-            trigger: "change",
-            message: "请输入验证码"
-          }
         ]
       }
     };
   },
   methods: {
 //登录表单提交
-    onSubmit() {
+    async onSubmit() {
+      let _this = this;
+
       //从后台拿到的菜单数据
       // eslint-disable-next-line no-unused-vars
 
       // 校验通过以后 掉接口 this.$refs.shop 和html中ref对应
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate( async valid => {
             if (valid) {
-              console.log(valid);
+              console.log("登录信息已填写");
+              let formData = new FormData();
+              formData.append('username',_this.loginForm.username);
+              formData.append('password',_this.loginForm.password);
+              let {data: res} = await _this.$http.post("/api/user/login", formData);
+              console.log(res);
               //成功
               // eslint-disable-next-line no-unused-vars
               let menuList = [
@@ -256,14 +257,22 @@ export default {
                   updateTime: 1586684441000
                 }
               ];
-              //保存菜单数据
-              sessionStorage.setItem("menuList", JSON.stringify(menuList));
-              //保存路由数据
-              sessionStorage.setItem("routerList", JSON.stringify(routerList));
-              //动态生成路由
-              this.$store.commit("getMenuList", this.$router);
+
+              if (res.code=="200") {
+                console.log(res.code)
+                //保存菜单数据
+                sessionStorage.setItem("menuList", JSON.stringify(menuList));
+                //保存路由数据
+                sessionStorage.setItem("routerList", JSON.stringify(routerList));
+                //动态生成路由
+                this.$store.commit("getMenuList", this.$router);
+                await this.$router.push({path: '/home'});
+              } else {
+                alert(res.msg);
+                console.log(res.code)
+                this.clearAll();
+              }
               //登录成功后跳转的路由
-              this.$router.push({path: '/home'})
             }
           }
       );
@@ -290,7 +299,7 @@ export default {
 }
 
 .login-form {
-  height: 300px;
+  height: 250px;
   width: 350px;
   border-radius: 10px;
   box-shadow: 0 0 25px #cac6c6;

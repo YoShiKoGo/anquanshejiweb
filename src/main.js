@@ -8,10 +8,21 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //引入弹性盒子布局样式
 import './assets/css/flex.css'
-
+import axios from 'axios';
+Vue.prototype.$http = axios;
 Vue.use(ElementUI)
-
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+//axios拦截器，发送请求请求之前操作
+axios.interceptors.request.use(config=>{
+    if (config.url.indexOf('/api/user/login' !== -1)) {
+        //如果是登录。则按multipart/form-data方式提交
+        config.headers['Content-Type'] = 'multipart/form-data';
+    } else {
+        //不是登录，则按json格式提交
+        config.headers['Content-Type'] = 'application/json';
+    }
+    return config;
+})
 
 //每次刷新执行的方法
 router.beforeEach((to, from, next) => {

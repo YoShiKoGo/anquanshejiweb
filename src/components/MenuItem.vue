@@ -7,19 +7,12 @@
           <span slot="title">{{ menu.label }}</span>
         </template>
         <menu-item-test :menuList="menu.children"></menu-item-test>
-        <!--     <el-submenu index="1-4">
-               <span slot="title">选项4</span>
-               <el-menu-item index="1-4-1">选项1</el-menu-item>
-               <el-menu-item index="1-4-2">选项2</el-menu-item>
-             </el-submenu>-->
       </el-submenu>
       <el-menu-item v-else @click="selectMenu(menu) " :index="menu.path" :key="menu.path">
         <i :class="menu.icon"></i>
         <span slot="title">{{ menu.label }}</span>
       </el-menu-item>
     </template>
-
-
   </div>
 </template>
 

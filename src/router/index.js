@@ -22,9 +22,9 @@ const routes = [
         component:()=> import('../views/Desktop')
       },
       {
-        path: '/time',
-        name:'path',
-        component: () => import('../components/Time')
+        path: '/ip',
+        name: 'IP',
+        component: () => import('../views/IP')
       }
      /* {
         path: '/companyList',
