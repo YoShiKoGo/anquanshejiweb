@@ -14,7 +14,7 @@
           </el-dropdown>
         </div>
         <div class="header-right-user">
-          <div class="header-welcome">欢迎你，管理员</div>
+          <div class="header-welcome">欢迎你，{{ userName }}</div>
           <div class="header-time">{{ nowTime }}</div>
 
         </div>
@@ -53,7 +53,8 @@ export default {
   },
   data(){
     return{
-      nowTime:''
+      nowTime:'',
+      userName: sessionStorage.getItem("userName")
     }
   },
   methods:{

@@ -22,32 +22,12 @@ const routes = [
         component:()=> import('../views/Desktop')
       },
       {
-        path: '/ip',
-        name: 'IP',
-        component: () => import('../views/IP')
-      }
-     /* {
-        path: '/companyList',
-        name: 'CompanyList',
-        component: ()=>import('../views/system/company/CompanyList')
+        path: "/404",
+        name: "notFound",
+        component: () => import("../components/notFound")
       },
-      {
-        path: '/operatorList',
-        name: 'OperatorList',
-        component: ()=>import('../views/system/operator/OperatorList')
-      },
-      {
-        path: '/loginCount',
-        name: 'LoginCount',
-        component: ()=>import('../views/user/LoginCount')
-      },
-      {
-        path: '/logList',
-        name: 'LogList',
-        component: ()=>import('../views/log/LogList')
-      },*/
     ]
-  },
+  }
 
 ]
 const VueRouterPush = VueRouter.prototype.push

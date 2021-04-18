@@ -12,15 +12,17 @@ import axios from 'axios';
 Vue.prototype.$http = axios;
 Vue.use(ElementUI)
 Vue.config.productionTip = false;
-//axios拦截器，发送请求请求之前操作
+//axios拦截器，发送请求之前操作
 axios.interceptors.request.use(config=>{
-    if (config.url.indexOf('/api/user/login' !== -1)) {
-        //如果是登录。则按multipart/form-data方式提交
-        config.headers['Content-Type'] = 'multipart/form-data';
-    } else {
-        //不是登录，则按json格式提交
-        config.headers['Content-Type'] = 'application/json';
+    if(config.url.indexOf("/api/user/login") != -1){
+        //以multipart/form-data形式提交
+        config.headers['Content-Type'] = 'multipart/form-data'
+    }else{
+        //以json形式提交
+        config.headers['Content-Type'] = 'application/json'
     }
+    // 为请求头添加token字段
+    config.headers.token = sessionStorage.getItem('token')
     return config;
 })
 
@@ -34,7 +36,7 @@ router.beforeEach((to, from, next) => {
     store.commit('setActiveTabs', to.name);
     //解决页面刷新之后菜单不存在问题
     // eslint-disable-next-line no-empty,no-unused-vars
-    let menuData = sessionStorage.getItem("menuList");
+    let menuData = sessionStorage.getItem("token");
     if (to.path === '/') {
         if (menuData) {
             next({path: '/home'});
