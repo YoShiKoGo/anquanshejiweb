@@ -7,11 +7,32 @@
         width="40%"
     >
       <el-form :rules="rules" ref="addCompany" :model="addCompanyForm" :inline="true">
-        <el-form-item prop="companyName" label="公司名">
-          <el-input size="" v-model="addCompanyForm.companyName" width="42%" placeholder="请输入公司名"></el-input>
+        <el-form-item prop="username" label="用户名">
+          <el-input autocomplete="off" size="" v-model="addCompanyForm.username" width="42%"
+                    placeholder="请输入用户名"></el-input>
         </el-form-item>
-        <el-form-item prop="des" label="描述">
-          <el-input size="" v-model="addCompanyForm.des" placeholder="请输入描述"></el-input>
+        <el-form-item v-show="!isEdit" prop="password" label="密码">
+          <el-input autocomplete="off" size="" type="password" v-model="addCompanyForm.password" width="42%"
+                    placeholder="请输入密码"></el-input>
+        </el-form-item>
+        <el-form-item prop="loginName" label="姓名">
+          <el-input size="" v-model="addCompanyForm.loginName" placeholder="请输入姓名"></el-input>
+        </el-form-item>
+        <el-form-item prop="mobile" label="电话">
+          <el-input size="" v-model="addCompanyForm.mobile" placeholder="请输入电话"></el-input>
+        </el-form-item>
+        <el-form-item prop="email" label="邮箱">
+          <el-input size="" v-model="addCompanyForm.email" placeholder="请输入邮箱"></el-input>
+        </el-form-item>
+        <el-form-item prop="role" label="角色" v-show="role==='SYS_ADMIN'&&isEdit">
+          <el-select v-model="valueRole" placeholder="请选择">
+            <el-option
+                v-for="item in optionsRole"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span></span>
@@ -29,22 +50,16 @@
             <el-select v-model="value" filterable placeholder="请选择" @change="itemChange">
               <el-option
                   v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  :key="item.id"
+                  :label="item.companyName"
+                  :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="6">
-          <el-form-item label="用户名称">
-            <el-input size="" v-model="companyForm.companyName" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-button class="btn-left" type="primary" size="" icon="el-icon-search" @click="selectByCompanyName">查询
-        </el-button>
-        <el-button @click="openAddCompany" type="primary" size="" icon="el-icon-plus">新增</el-button>
+
+        <el-button v-show="value!==''" class="btn-left" @click="openAddCompany" type="primary" size="" icon="el-icon-plus">新增</el-button>
       </el-row>
     </el-form>
     <!--数据表格
@@ -59,19 +74,28 @@
         border
         style="width: 100%" size="">
       <el-table-column
-          prop="companyName"
-          label="公司名称"
+          prop="username"
+          label="用户名"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="des"
-          label="描述"
+          prop="loginName"
+          label="姓名"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="adminUserName"
-          label="管理员">
+          prop="mobile"
+          label="电话">
       </el-table-column>
+      <el-table-column
+          prop="email"
+          label="邮箱">
+      </el-table-column>
+      <el-table-column
+          prop="role"
+          label="角色">
+      </el-table-column>
+
       <el-table-column label="操作" width="160" align="center">
         <template slot-scope="scope">
           <el-button
@@ -86,56 +110,103 @@
       </el-table-column>
     </el-table>
   </el-main>
-
-
 </template>
 
 <script>
+/**
+ * 邮箱
+ * @param {*} s
+ */
+export function isEmail(s) {
+  return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
+}
+
+// eslint-disable-next-line no-unused-vars
+let validateEmail = (rule, value, callback) => {
+  // eslint-disable-next-line no-undef
+  if (!isEmail(value)) {
+    callback(new Error('邮箱格式错误'))
+  } else {
+    callback()
+  }
+}
 export default {
+
   name: "company",
   status: 0,
   data() {
     return {
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: '',
       /*表单验证*/
       rules: {
-        companyName: [
+        username: [
           {
             required: true,
             trigger: 'change',
-            message: '请输入公司名称'
+            message: '请输入用户名'
           },
         ],
-        des: [
+        password: [
           {
             required: true,
             trigger: 'change',
-            message: '请选择平台管理员'
+            message: '请输入密码'
+          },
+        ],
+        loginName: [
+          {
+            required: true,
+            trigger: 'change',
+            message: '请输入用户名'
           }
-        ]
+        ],
+        email: [
+          {
+            required: true,
+            trigger: 'change',
+            message: '请输入邮箱'
+          },
+          {
+            validator: validateEmail,
+            trigger: 'blur'
+          }
+        ],
+        mobile: [
+          {
+            required: true,
+            trigger: 'change',
+            message: '请输入电话'
+          },
+        ],
 
       },
-      //添加公司的数据
+      //判断是否是点击的编辑
+      isEdit: false,
+      //公司id保证当前添加更改用户时存入公司id
+      companyId: '',
+
+      optionsRole: [
+        {
+          value: 'ADMIN',
+          label: '公司管理员'
+        }, {
+          value: 'USER',
+          label: '操作员'
+        },],
+      valueRole: '',
+      //当前用户的权限
+      role: sessionStorage.getItem("role"),
+      options: [],
+      value: '',
+      //添加用户的数据
       addCompanyForm: {
-        id: '',
-        companyName: '',
-        des: ''
+        username: '',
+        password: '',
+        mobile: '',
+        email: '',
+        loginName: '',
+        role: '',
+        id: ''
+
       },
       //编辑公司的数据
       editCompanyForm: {
@@ -150,13 +221,26 @@ export default {
         companyName: ''
       },
       tableHeight: window.innerHeight - 250,
+      //用户列表
       tableData: []
     }
   },
+
+
   methods: {
     //点击下拉框事件
-    itemChange() {
-      console.log(this.value);
+    async itemChange() {
+      //value为公司的id
+      let id = this.value;
+      let formData = new FormData()
+      formData.append("companyId", id)
+      formData.append("userId", sessionStorage.getItem("userId"))
+      console.log(sessionStorage.getItem("userId"))
+      let {data: res} = await this.$http.post("/api/user/findByCompanyId", formData);
+      console.log(res);
+      this.tableData = res.data;
+      this.companyId = id;
+      console.log(this.tableData)
     },
     //删除按钮
     deleteRow(row) {
@@ -169,10 +253,10 @@ export default {
           .then(async () => {
 
             let formData = new FormData
-            formData.append("companyId", row.id);
+            formData.append("id", row.id);
             console.log(row.id);
             let {data: res} = await _this.$http.post(
-                "/api/company/deleteById",
+                "/api/user/deleteById",
                 formData
             );
             if (res.code === 200) {
@@ -181,6 +265,7 @@ export default {
                 type: "success"
               });
               _this.getCompanyList();
+              _this.itemChange();
             } else {
               _this.$message({
                 message: res.msg,
@@ -191,18 +276,22 @@ export default {
     },
     //编辑按钮
     editRow(row) {
-      this.status = 1;
-      this.dialogTitle = '修改公司平台'
+      this.isEdit = true;
+      this.dialogTitle = '修改用户平台'
       this.visible = true;
-      this.addCompanyForm.companyName = row.companyName;
-      this.addCompanyForm.des = row.des
+      console.log(row);
+      this.addCompanyForm.username = row.username;
+      this.addCompanyForm.loginName = row.loginName
+      this.addCompanyForm.mobile = row.mobile
+      this.addCompanyForm.email = row.email
       this.addCompanyForm.id = row.id;
+      this.valueRole = row.role;
     },
-    /*新增公司*/
+    /*点击新建按钮*/
     openAddCompany() {
-      this.status = 0
+      this.isEdit = false;
       this.resetForm("addCompany")
-      this.dialogTitle = '添加公司平台'
+      this.dialogTitle = '添加用户'
       this.visible = true;
     },
 
@@ -212,50 +301,81 @@ export default {
         this.$refs[formName].resetFields();
       }
     },
-    /*添加公司的确定事件*/
+    /*弹出框的确定事件*/
     confirmBtn() {
       let _this = this;
-
-      _this.$refs.addCompany.validate(valid => {
-        if (valid) {
-          if (this.status === 0) {
-            let parm = {
-              companyName: _this.addCompanyForm.companyName,
-              des: _this.addCompanyForm.companyName
-            }
-            let {data: resAdd} = _this.$http.post("api/company/insert", parm);
-            _this.getCompanyList();
-            if (resAdd.code === 200) {
-              //信息提示
-              _this.$message({
-                message: resAdd.msg,
-                type: 'success'
-              })
-            }
-            /*当为更新表单时*/
-          } else if (this.status === 1) {
-            let parm = {
-              id: _this.addCompanyForm.id,
-              companyName: _this.addCompanyForm.companyName,
-              des: _this.addCompanyForm.des
-            }
-
-            let {data: resAdd} = _this.$http.post("api/company/update", parm);
-            _this.getCompanyList();
-            if (resAdd.code === 200) {
-              //信息提示
-              _this.$message({
-                message: resAdd.msg,
-                type: 'success'
-              })
-            }
+      //新增
+      if (!_this.isEdit) {
+        _this.$refs.addCompany.validate(valid => {
+          if (valid) {
+            this.addUser();
           }
-        }
-        _this.visible = false;
+        });
+        //编辑
+      } else {
+        console.log(_this.valueRole);
+        this.editUser()
+      }
+      _this.visible = false;
 
 
-      });
+    },
 
+    //编辑用户
+    async editUser() {
+      let parm = {
+        username: this.addCompanyForm.username,
+        loginName: this.addCompanyForm.loginName,
+        mobile: this.addCompanyForm.mobile,
+        email: this.addCompanyForm.email,
+        role: this.valueRole,
+        companyId: this.companyId,
+        id: this.addCompanyForm.id
+      };
+      console.log(parm);
+      let {data: resAdd} = await this.$http.post("api/user/update", parm);
+      console.log(resAdd);
+      if (resAdd.code === 200) {
+        //信息提示
+        this.$message({
+          message: resAdd.msg,
+          type: 'success'
+        });
+        this.itemChange();
+      } else {
+        this.$message({
+          message: resAdd.msg,
+          type: "error"
+        });
+      }
+    },
+
+    //添加用户
+    async addUser() {
+      let parm = {
+        username: this.addCompanyForm.username,
+        password: this.addCompanyForm.password,
+        loginName: this.addCompanyForm.loginName,
+        mobile: this.addCompanyForm.mobile,
+        email: this.addCompanyForm.email,
+        companyId: this.companyId,
+        role: this.valueRole
+      }
+      let {data: resAdd} = await this.$http.post("api/user/addUser", parm);
+      if (resAdd.code === 200) {
+        //信息提示
+        this.$message({
+          message: resAdd.msg,
+          type: 'success'
+        });
+        this.itemChange();
+
+      } else {
+        this.$message({
+          message: resAdd.msg,
+          type: "error"
+        });
+      }
     },
     //查询公司
     async selectByCompanyName() {
@@ -270,17 +390,28 @@ export default {
       }
     },
 
+    //获取公司列表
     async getCompanyList() {
       let _this = this;
       let {data: res} = await _this.$http.post("api/company/findAll");
       console.log(res);
-      _this.tableData = res.data;
-      console.log(_this.tableData);
+      _this.options = res.data
+      console.log(_this.options)
+      console.log(_this.options);
+    },
+    /**
+     * 邮箱
+     * @param {*} s
+     */
+    isEmail(s) {
+      return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
     }
+
 
   },
 
   mounted() {
+    //在页面加载时，获取公司列表
     this.getCompanyList();
 
   },

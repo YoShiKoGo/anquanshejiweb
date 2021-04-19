@@ -4,15 +4,15 @@
     <el-header class="header ub main-justify cross-center">
       <div class="header-title">后台用户管理系统</div>
       <div class="ub main-center cross-center header-right">
-        <div>
+
           <el-dropdown placement='bottom-start'>
-            <img class="header-img" src="../assets/images/avatar.jpg" alt="用户头像"/>
+            <img class="user-img" src="../assets/images/avatar.jpg" alt="用户头像"/>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
               <el-dropdown-item>退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </div>
+
         <div class="header-right-user">
           <div class="header-welcome">欢迎你，{{ userName }}</div>
           <div class="header-time">{{ nowTime }}</div>
@@ -23,17 +23,17 @@
     <!-- 头部结束 -->
     <!--侧边栏-->
     <el-container>
-    <el-aside width="auto">
-    <menu-bar></menu-bar>
-    </el-aside>
-<!--选项卡，主界面      -->
-    <el-container>
-      <el-main  style='padding: 0'>
-        <tabs></tabs>
-        <router-view></router-view>
-      </el-main>
-      <!--      <el-footer>Footer</el-footer>-->
-    </el-container>
+      <el-aside width="auto">
+        <menu-bar></menu-bar>
+      </el-aside>
+      <!--选项卡，主界面      -->
+      <el-container>
+        <el-main style='padding: 0'>
+          <tabs></tabs>
+          <router-view></router-view>
+        </el-main>
+        <!--      <el-footer>Footer</el-footer>-->
+      </el-container>
     </el-container>
   </el-container>
 </template>
@@ -42,6 +42,7 @@
 import MenuBar from "@/components/MenuBar";
 // eslint-disable-next-line no-unused-vars
 import tabs from "@/components/tabs";
+
 export default {
   name: "home",
   components: {
@@ -51,14 +52,14 @@ export default {
     tabs,
 
   },
-  data(){
-    return{
-      nowTime:'',
+  data() {
+    return {
+      nowTime: '',
       userName: sessionStorage.getItem("userName")
     }
   },
-  methods:{
-    timeFormate (timeStamp) {
+  methods: {
+    timeFormate(timeStamp) {
       let year = new Date(timeStamp).getFullYear()
       let month = new Date(timeStamp).getMonth() + 1 < 10 ? '0' + (new Date(timeStamp).getMonth() + 1) : new Date(timeStamp).getMonth() + 1
       let date = new Date(timeStamp).getDate() < 10 ? '0' + new Date(timeStamp).getDate() : new Date(timeStamp).getDate()
@@ -70,20 +71,20 @@ export default {
       let getWeek = '星期' + weeks[week]
       this.nowTime = year + '年' + month + '月' + date + '日' + ' ' + hh + ':' + mm + ':' + ss + getWeek
     }, // 实时刷新当前时间，格式化
-    nowTimes () {
+    nowTimes() {
       this.timeFormate(new Date())
       setInterval(this.nowTimes, 1000)
       this.clear()
     },
-    clear () {
+    clear() {
       clearInterval(this.nowTimes)
       this.nowTimes = null
     }
   },
-  mounted () {
+  mounted() {
     this.nowTimes()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.clear()
   }
 };
@@ -127,11 +128,17 @@ header {
 .header-right {
   margin-right: 30px;
 }
+
 /*左侧菜单CSS样式*/
 .el-container /deep/
-
 .el-menu {
   border-right: none !important;
+}
+.user-img {
+  height: 45px;
+  width: 45px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 

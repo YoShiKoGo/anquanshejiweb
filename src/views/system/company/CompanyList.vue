@@ -66,7 +66,7 @@
               size="mini">编辑
           </el-button>
           <el-button
-              @click.native.prevent="deleteRow(scope.row)" type="danger"
+              @click.native.prevent="deleteRow(cc)" type="danger"
               size="mini">删除
           </el-button>
         </template>

@@ -14,7 +14,7 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false;
 //axios拦截器，发送请求之前操作
 axios.interceptors.request.use(config=>{
-    if(config.url.indexOf("/api/user/login") != -1){
+    if(config.url.indexOf("/api/user/login") !== -1){
         //以multipart/form-data形式提交
         config.headers['Content-Type'] = 'multipart/form-data'
     }else{
@@ -25,6 +25,36 @@ axios.interceptors.request.use(config=>{
     config.headers.token = sessionStorage.getItem('token')
     return config;
 })
+//判断token时是否过期
+axios.interceptors.response.use(
+    response =>{
+        if(response.status === 200){
+            //等于600说明token过期或者token认证失败，需要从新登陆
+            if(response.data.code == 600){
+                sessionStorage.clear();
+                window.location.href = "/";
+                return response;
+            }else{
+                return Promise.resolve(response);
+            }
+        }else{
+            return Promise.reject(response);
+        }
+    },
+    error =>{
+        if(error.response.status){
+            ElementUI.Message({
+                message:error.response.data.msg,
+                type:'error'
+            })
+            if(error.response.data.code == 600){
+                sessionStorage.clear();
+                window.location.href = "/login";
+            }
+            return Promise.reject(error.response);
+        }
+    }
+)
 
 //每次刷新执行的方法
 router.beforeEach((to, from, next) => {

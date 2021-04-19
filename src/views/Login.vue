@@ -142,6 +142,7 @@ export default {
                 sessionStorage.setItem("token", res.data.token);
                 sessionStorage.setItem("userId", res.data.userId);
                 sessionStorage.setItem("userName", res.data.userName);
+                sessionStorage.setItem("role", res.data.role);
                 this.$message({
                   message: res.msg,
                   type: 'success'
