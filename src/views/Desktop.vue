@@ -33,6 +33,10 @@
         prop="ip"
         label="ip地址">
     </el-table-column>
+    <el-table-column
+        prop="laskLogin"
+        label="最后登录时间">
+    </el-table-column>
   </el-table>
 </template>
 <style scoped>

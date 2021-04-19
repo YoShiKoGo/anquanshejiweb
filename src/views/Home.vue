@@ -5,13 +5,13 @@
       <div class="header-title">后台用户管理系统</div>
       <div class="ub main-center cross-center header-right">
 
-          <el-dropdown placement='bottom-start'>
-            <img class="user-img" src="../assets/images/avatar.jpg" alt="用户头像"/>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+        <el-dropdown placement='bottom-start'>
+          <img class="user-img" src="../assets/images/avatar.jpg" alt="用户头像"/>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 
         <div class="header-right-user">
           <div class="header-welcome">欢迎你，{{ userName }}</div>
@@ -79,14 +79,24 @@ export default {
     clear() {
       clearInterval(this.nowTimes)
       this.nowTimes = null
-    }
+    },
+    async logout() {
+
+      let {data: res} = await this.$http.post("/api/user/loginOut");
+      console.log(res);
+      if (res.code === 200) {
+        sessionStorage.clear();
+        window.location.href = "/";
+      }
+    },
   },
   mounted() {
     this.nowTimes()
   },
   beforeDestroy() {
     this.clear()
-  }
+  },
+
 };
 </script>
 <style scoped>
@@ -134,6 +144,7 @@ header {
 .el-menu {
   border-right: none !important;
 }
+
 .user-img {
   height: 45px;
   width: 45px;

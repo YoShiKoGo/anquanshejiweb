@@ -392,12 +392,18 @@ export default {
 
     //获取公司列表
     async getCompanyList() {
-      let _this = this;
-      let {data: res} = await _this.$http.post("api/company/findAll");
-      console.log(res);
-      _this.options = res.data
-      console.log(_this.options)
-      console.log(_this.options);
+      if (sessionStorage.getItem("role") === 'SYS_ADMIN') {
+        let {data: res} = await this.$http.post('api/company/findAll');
+        this.options = res.data
+        console.log(res);
+      } else {
+        let formData = new FormData();
+        formData.append("userId",sessionStorage.getItem("userId"))
+        let {data: res} = await this.$http.post('api/company/findByUserId',formData);
+        console.log(res);
+        this.options = res.data
+        console.log(this.options)
+      }
     },
     /**
      * 邮箱

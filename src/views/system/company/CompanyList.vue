@@ -66,7 +66,7 @@
               size="mini">编辑
           </el-button>
           <el-button
-              @click.native.prevent="deleteRow(cc)" type="danger"
+              @click.native.prevent="deleteRow(scope.row)" type="danger"
               size="mini">删除
           </el-button>
         </template>
@@ -80,7 +80,7 @@
 <script>
 export default {
   name: "company",
-  status:0,
+  status: 0,
   data() {
     return {
       /*表单验证*/
@@ -103,7 +103,7 @@ export default {
       },
       //添加公司的数据
       addCompanyForm: {
-        id:'',
+        id: '',
         companyName: '',
         des: ''
       },
@@ -136,10 +136,10 @@ export default {
             /*let parm = {
               companyId: row.id
             };*/
-            let formData=new FormData
+            let formData = new FormData
             formData.append("companyId", row.id);
             console.log(row.id);
-            let { data: res } = await _this.$http.post(
+            let {data: res} = await _this.$http.post(
                 "/api/company/deleteById",
                 formData
             );
@@ -149,7 +149,7 @@ export default {
                 type: "success"
               });
               _this.getCompanyList();
-            }else{
+            } else {
               _this.$message({
                 message: res.msg,
                 type: "error"
@@ -163,7 +163,7 @@ export default {
       this.dialogTitle = '修改公司平台'
       this.visible = true;
       this.addCompanyForm.companyName = row.companyName;
-      this.addCompanyForm.des=row.des
+      this.addCompanyForm.des = row.des
       this.addCompanyForm.id = row.id;
     },
     /*新增公司*/
@@ -180,6 +180,55 @@ export default {
         this.$refs[formName].resetFields();
       }
     },
+    async addCompany() {
+      let _this = this;
+
+      let parm = {
+        companyName: _this.addCompanyForm.companyName,
+        des: _this.addCompanyForm.companyName
+      }
+      let {data: resAdd} = await _this.$http.post("api/company/insert", parm);
+      _this.getCompanyList();
+      if (resAdd.code === 200) {
+        //信息提示
+        _this.$message({
+          message: resAdd.msg,
+          type: 'success'
+        })
+      }else {
+        this.$message({
+          message: resAdd.msg,
+          type: "error"
+        });
+      }
+    },
+
+    async editCompany() {
+      let _this = this;
+
+      let parm = {
+        id: _this.addCompanyForm.id,
+        companyName: _this.addCompanyForm.companyName,
+        des: _this.addCompanyForm.des
+      }
+
+      let {data: resAdd} = await _this.$http.post("api/company/update", parm);
+      _this.getCompanyList();
+      console.log(resAdd)
+      if (resAdd.code === 200) {
+        //信息提示
+        _this.$message({
+          message: resAdd.msg,
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: resAdd.msg,
+          type: "error"
+        });
+      }
+    },
+
     /*添加公司的确定事件*/
     confirmBtn() {
       let _this = this;
@@ -187,39 +236,12 @@ export default {
       _this.$refs.addCompany.validate(valid => {
         if (valid) {
           if (this.status === 0) {
-            let parm = {
-              companyName: _this.addCompanyForm.companyName,
-              des: _this.addCompanyForm.companyName
-            }
-            let {data: resAdd} =  _this.$http.post("api/company/insert", parm);
-            _this.getCompanyList();
-            if (resAdd.code === 200) {
-              //信息提示
-              _this.$message({
-                message: resAdd.msg,
-                type: 'success'
-              })
-            }
-          /*当为更新表单时*/
-          }else if (this.status === 1) {
-            let parm = {
-              id:_this.addCompanyForm.id,
-              companyName: _this.addCompanyForm.companyName,
-              des: _this.addCompanyForm.des
-            }
-
-             let {data: resAdd} =_this.$http.post("api/company/update", parm);
-            _this.getCompanyList();
-            console.log(resAdd)
-    /*        if (resAdd.code === 200) {
-              //信息提示
-              _this.$message({
-                message: resAdd.msg,
-                type: 'success'
-              })
-            }*/
+            this.addCompany()
+            /*当为更新表单时*/
+          } else if (this.status === 1) {
+            this.editCompany();
           }
-          }
+        }
         _this.visible = false;
 
 
