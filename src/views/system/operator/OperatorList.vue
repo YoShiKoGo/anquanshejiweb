@@ -254,6 +254,7 @@ export default {
 
             let formData = new FormData
             formData.append("id", row.id);
+            formData.append("opId", sessionStorage.getItem("userName"));
             console.log(row.id);
             let {data: res} = await _this.$http.post(
                 "/api/user/deleteById",
@@ -330,7 +331,8 @@ export default {
         email: this.addCompanyForm.email,
         role: this.valueRole,
         companyId: this.companyId,
-        id: this.addCompanyForm.id
+        id: this.addCompanyForm.id,
+        opUser:sessionStorage.getItem("userName")
       };
       console.log(parm);
       let {data: resAdd} = await this.$http.post("api/user/update", parm);
@@ -359,7 +361,8 @@ export default {
         mobile: this.addCompanyForm.mobile,
         email: this.addCompanyForm.email,
         companyId: this.companyId,
-        role: this.valueRole
+        role: this.valueRole,
+        opUser: sessionStorage.getItem("userName")
       }
       let {data: resAdd} = await this.$http.post("api/user/addUser", parm);
       if (resAdd.code === 200) {

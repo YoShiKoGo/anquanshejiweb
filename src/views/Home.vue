@@ -7,8 +7,7 @@
 
         <el-dropdown placement='bottom-start'>
           <img class="user-img" src="../assets/images/avatar.jpg" alt="用户头像"/>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item @click.native="logout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -80,6 +79,7 @@ export default {
       clearInterval(this.nowTimes)
       this.nowTimes = null
     },
+    //退出登录
     async logout() {
 
       let {data: res} = await this.$http.post("/api/user/loginOut");

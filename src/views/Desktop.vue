@@ -6,12 +6,12 @@
     <el-table-column
         prop="username"
         label="用户名"
-        width="180">
+        width="100">
     </el-table-column>
     <el-table-column
         prop="loginName"
         label="姓名"
-        width="180">
+        width="100">
     </el-table-column>
     <el-table-column
         prop="mobile"
@@ -34,7 +34,7 @@
         label="ip地址">
     </el-table-column>
     <el-table-column
-        prop="laskLogin"
+        prop="lastLoginTime"
         label="最后登录时间">
     </el-table-column>
   </el-table>
@@ -52,7 +52,8 @@ export default {
         email: '',
         role: '',
         companyName: '',
-        ip: localStorage.getItem("Ip")
+        ip: localStorage.getItem("Ip"),
+        lastLoginTime:''
       }]
     }
   },
@@ -67,6 +68,7 @@ export default {
     this.tableData[0].mobile = res.data.mobile;
     this.tableData[0].email = res.data.email;
     this.tableData[0].role = res.data.role;
+    this.tableData[0].lastLoginTime = res.data.lastLoginTime;
     if (res.data.companyId === null) {
       this.tableData[0].companyName = "系统管理员";
     } else {
