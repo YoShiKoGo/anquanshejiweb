@@ -143,6 +143,7 @@ export default {
                 sessionStorage.setItem("userId", res.data.userId);
                 sessionStorage.setItem("userName", res.data.userName);
                 sessionStorage.setItem("role", res.data.role);
+                sessionStorage.setItem("lastLoginTime", res.data.lastLoginTime);
                 this.$message({
                   message: res.msg,
                   type: 'success'

@@ -2,7 +2,7 @@
   <el-main>
 
     <!--搜索框  -->
-    <el-form size="mine" :model="companyForm" label-width="80px">
+    <el-form size="mine"  label-width="80px">
       <el-row>
         <el-col :span="6">
           <el-form-item label="日期区间">
@@ -41,7 +41,7 @@
           width="180">
       </el-table-column>
       <el-table-column
-          prop="loginName"
+          prop="loginCount"
           label="登录次数"
           width="180">
       </el-table-column>
@@ -88,15 +88,18 @@ export default {
       },
       value: '',
       tableHeight: window.innerHeight - 250,
-    };
+      tableData: ""
+    }
   },
   methods:{
     async search() {
       console.log(this.value);
       let formData=new FormData()
-      formData.append("data",this.value[0])
-      let {data: res} = await this.$http.post("api/loginCount/test",formData);
+      formData.append("beginTime",this.value[0])
+      formData.append("endTime",this.value[1])
+      let {data: res} = await this.$http.post("api/loginCount/findByTime",formData);
       console.log(res);
+      this.tableData = res.data;
     }
   }
 }

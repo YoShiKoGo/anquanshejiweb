@@ -68,7 +68,7 @@ export default {
     this.tableData[0].mobile = res.data.mobile;
     this.tableData[0].email = res.data.email;
     this.tableData[0].role = res.data.role;
-    this.tableData[0].lastLoginTime = res.data.lastLoginTime;
+    this.tableData[0].lastLoginTime = sessionStorage.getItem("lastLoginTime");
     if (res.data.companyId === null) {
       this.tableData[0].companyName = "系统管理员";
     } else {

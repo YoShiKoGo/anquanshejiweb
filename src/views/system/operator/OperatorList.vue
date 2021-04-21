@@ -135,6 +135,20 @@ export default {
   name: "company",
   status: 0,
   data() {
+    var checkPhone = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('手机号不能为空'));
+      } else {
+        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+        console.log(reg.test(value));
+        if (reg.test(value)) {
+          callback();
+        } else {
+          return callback(new Error('请输入正确的手机号'));
+        }
+      }
+    };
+
     return {
       /*表单验证*/
       rules: {
@@ -144,6 +158,7 @@ export default {
             trigger: 'change',
             message: '请输入用户名'
           },
+
         ],
         password: [
           {
@@ -176,6 +191,9 @@ export default {
             trigger: 'change',
             message: '请输入电话'
           },
+          {
+            validator: checkPhone, trigger: 'blur'
+          }
         ],
 
       },
@@ -318,8 +336,6 @@ export default {
         this.editUser()
       }
       _this.visible = false;
-
-
     },
 
     //编辑用户
