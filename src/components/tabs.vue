@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs :value="editableTabsValue" type="card"  closable @tab-click="tabClick" @tab-remove="removeTab">
+    <el-tabs :value="editableTabsValue" type="card"   @tab-click="tabClick" >
       <el-tab-pane
           v-for="item in editableTabs"
           :key="item.name"
@@ -67,7 +67,7 @@ export default {
       //组装tabs数据
       let obj = {};
       if (tab.name === "desktop") {
-        obj.title = "首页";
+        obj.title = "用户信息";
       } else {
         obj.title = tab.label;
       }
@@ -79,9 +79,9 @@ export default {
     },
     //关闭tab方法
     removeTab(targetName) {
-      if (targetName === 'desktop') {
-        return;
-      }
+      // if (targetName === 'desktop') {
+      //   return;
+      // }
       let tabs = this.editableTabs;
       let activeName = this.editableTabsValue;
       if (activeName === targetName) {

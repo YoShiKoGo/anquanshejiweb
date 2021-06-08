@@ -2,6 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import JSEncrypt from 'jsencrypt';//引入模块
+import crypto from "crypto";
+Vue.prototype.$crypto = crypto;
+Vue.prototype.$jsEncrypt = JSEncrypt;//配置全局变量
+
 //element引入
 import ElementUI from 'element-ui'
 //element样式
@@ -21,40 +26,10 @@ axios.interceptors.request.use(config=>{
         //以json形式提交
         config.headers['Content-Type'] = 'application/json'
     }
-    // 为请求头添加token字段
-    config.headers.token = sessionStorage.getItem('token')
+
     return config;
 })
-//判断token时是否过期
-axios.interceptors.response.use(
-    response =>{
-        if(response.status === 200){
-            //等于600说明token过期或者token认证失败，需要从新登陆
-            if(response.data.code == 600){
-                sessionStorage.clear();
-                window.location.href = "/";
-                return response;
-            }else{
-                return Promise.resolve(response);
-            }
-        }else{
-            return Promise.reject(response);
-        }
-    },
-    error =>{
-        if(error.response.status){
-            ElementUI.Message({
-                message:error.response.data.msg,
-                type:'error'
-            })
-            if(error.response.data.code == 600){
-                sessionStorage.clear();
-                window.location.href = "/login";
-            }
-            return Promise.reject(error.response);
-        }
-    }
-)
+
 
 //每次刷新执行的方法
 router.beforeEach((to, from, next) => {
@@ -66,16 +41,16 @@ router.beforeEach((to, from, next) => {
     store.commit('setActiveTabs', to.name);
     //解决页面刷新之后菜单不存在问题
     // eslint-disable-next-line no-empty,no-unused-vars
-    let menuData = sessionStorage.getItem("token");
+    let userId = sessionStorage.getItem("userId");
     if (to.path === '/') {
-        if (menuData) {
+        if (userId) {
             next({path: '/home'});
         } else {
             next();
         }
     } else {
         //未登录跳转到登录界面
-        if (!menuData && to.name !== 'login') {
+        if (!userId && to.name !== 'login') {
             next({path: '/'});
         } else {
             //若菜单数据不存在，则存入

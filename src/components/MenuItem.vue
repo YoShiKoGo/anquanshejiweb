@@ -27,13 +27,13 @@ export default {
   methods:{
     // eslint-disable-next-line no-unused-vars
     selectMenu(item) {
-      console.log("点击了左侧菜单")
+      //console.log("点击了左侧菜单")
       //设置选项卡
       this.$store.commit('selectMenu', item);
       //设置路由
-      console.log(item.name)
+      //console.log(item.name)
       this.$router.push({name:item.name})
-      console.log("左侧跳转路由")
+      //console.log("左侧跳转路由")
     }
   }
 }

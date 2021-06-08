@@ -7,11 +7,11 @@
         width="40%"
     >
       <el-form :rules="rules" ref="addCompany" :model="addCompanyForm" :inline="true">
-        <el-form-item prop="companyName" label="公司名">
-          <el-input size="" v-model="addCompanyForm.companyName" width="42%" placeholder="请输入公司名"></el-input>
+        <el-form-item prop="platformName" label="平台名">
+          <el-input size="" v-model="addCompanyForm.platformName" width="42%" placeholder="请输入平台名"></el-input>
         </el-form-item>
-        <el-form-item prop="des" label="描述">
-          <el-input size="" v-model="addCompanyForm.des" placeholder="请输入描述"></el-input>
+        <el-form-item prop="platformCode" label="平台代码">
+          <el-input size="" v-model="addCompanyForm.platformCode" placeholder="平台代码"></el-input>
         </el-form-item>
       </el-form>
       <span></span>
@@ -26,10 +26,10 @@
       <el-row>
         <el-col :span="6">
           <el-form-item label="公司名称">
-            <el-input size="" v-model="companyForm.companyName" placeholder="请输入公司名"></el-input>
+            <el-input size="" v-model="companyForm.platformName" placeholder="请输入公司名"></el-input>
           </el-form-item>
         </el-col>
-        <el-button class="btn-left" type="primary" size="" icon="el-icon-search" @click="selectByCompanyName">查询
+        <el-button class="btn-left" type="primary" size="" icon="el-icon-search" @click="selectByplatformName">查询
         </el-button>
         <el-button @click="openAddCompany" type="primary" size="" icon="el-icon-plus">新增</el-button>
       </el-row>
@@ -46,18 +46,28 @@
         border
         style="width: 100%" size="">
       <el-table-column
-          prop="companyName"
-          label="公司名称"
+          prop="platformName"
+          label="平台名"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="des"
-          label="描述"
+          prop="platformCode"
+          label="平台代码"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="adminUserName"
-          label="管理员">
+          prop="manage"
+          label="管理员"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="operatorCount"
+          label="平台下人员数"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="create_time"
+          label="平台创建时间">
       </el-table-column>
       <el-table-column label="操作" width="160" align="center">
         <template slot-scope="scope">
@@ -85,39 +95,39 @@ export default {
     return {
       /*表单验证*/
       rules: {
-        companyName: [
+        platformName: [
           {
             required: true,
             trigger: 'change',
             message: '请输入公司名称'
           },
         ],
-        des: [
+        platformCode: [
           {
             required: true,
             trigger: 'change',
-            message: '请选择平台管理员'
+            message: '请输入平台代码'
           }
         ]
 
       },
       //添加公司的数据
       addCompanyForm: {
-        id: '',
-        companyName: '',
-        des: ''
+        _id: '',
+        platformName: '',
+        platformCode: ''
       },
       //编辑公司的数据
       editCompanyForm: {
-        companyName: '',
-        des: ''
+        platformName: '',
+        platformCode: ''
       },
       //对话框标题
       dialogTitle: '',
       //对话框显示状态
       visible: false,
       companyForm: {
-        companyName: ''
+        platformName: ''
       },
       tableHeight: window.innerHeight - 250,
       tableData: []
@@ -137,21 +147,23 @@ export default {
               companyId: row.id
             };*/
             let formData = new FormData
-            formData.append("companyId", row.id);
-            console.log(row.id);
+            formData.append("_id", row._id);
+            console.log(row._id);
             let {data: res} = await _this.$http.post(
-                "/api/company/deleteById",
+                "/api/company/delPlatform",
                 formData
             );
-            if (res.code === 200) {
+            console.log(res);
+            if (res.resCode ==="1000") {
+              this.getCompanyList();
               _this.$message({
-                message: res.msg,
+                message: res.resMsg,
                 type: "success"
               });
-              _this.getCompanyList();
             } else {
+              this.getCompanyList();
               _this.$message({
-                message: res.msg,
+                message: res.resMsg,
                 type: "error"
               });
             }
@@ -162,9 +174,9 @@ export default {
       this.status = 1;
       this.dialogTitle = '修改公司平台'
       this.visible = true;
-      this.addCompanyForm.companyName = row.companyName;
-      this.addCompanyForm.des = row.des
-      this.addCompanyForm.id = row.id;
+      this.addCompanyForm.platformName = row.platformName;
+      this.addCompanyForm.platformCode = row.platformCode
+      this.addCompanyForm._id = row._id;
     },
     /*新增公司*/
     openAddCompany() {
@@ -183,21 +195,23 @@ export default {
     async addCompany() {
       let _this = this;
 
-      let parm = {
-        companyName: _this.addCompanyForm.companyName,
-        des: _this.addCompanyForm.companyName
+      let platform = {
+        platformName: _this.addCompanyForm.platformName,
+        platformCode: _this.addCompanyForm.platformCode
       }
-      let {data: resAdd} = await _this.$http.post("api/company/insert", parm);
+      //console.log(platform)
+      let {data: resAdd} = await _this.$http.post("api/company/addPlatform", platform);
       _this.getCompanyList();
-      if (resAdd.code === 200) {
+      //console.log(resAdd)
+      if (resAdd.resCode === "1000") {
         //信息提示
         _this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: 'success'
         })
       }else {
         this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: "error"
         });
       }
@@ -206,24 +220,24 @@ export default {
     async editCompany() {
       let _this = this;
 
-      let parm = {
-        id: _this.addCompanyForm.id,
-        companyName: _this.addCompanyForm.companyName,
-        des: _this.addCompanyForm.des
+      let platform = {
+        _id: _this.addCompanyForm._id,
+        platformName: _this.addCompanyForm.platformName,
+        platformCode: _this.addCompanyForm.platformCode
       }
-
-      let {data: resAdd} = await _this.$http.post("api/company/update", parm);
+      //console.log(platform)
+      let {data: resAdd} = await _this.$http.post("api/company/modifyPlatform", platform);
       _this.getCompanyList();
-      console.log(resAdd)
-      if (resAdd.code === 200) {
+      //console.log(resAdd)
+      if (resAdd.resCode === "1000") {
         //信息提示
         _this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: 'success'
         })
       } else {
         this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: "error"
         });
       }
@@ -248,25 +262,26 @@ export default {
       });
 
     },
-    //查询公司
-    async selectByCompanyName() {
+    //查询平台
+    async selectByplatformName() {
       let _this = this;
-      let companyName = this.companyForm.companyName;
+      let platformName = this.companyForm.platformName;
       let formData = new FormData()
-      formData.append('companyName', companyName)
-      let {data: res} = await _this.$http.post("api/company/findByCompanyName", formData);
-      _this.tableData = [];
-      if (res.data !== null) {
-        _this.tableData[0] = res.data;
-      }
+      formData.append('platformName', platformName)
+      console.log(platformName);
+        let {data: res} = await _this.$http.post("api/company/findByPlatformName", formData);
+        _this.tableData = [];
+        console.log("通过名字查找",res);
+        if (res.resObj !== null) {
+          _this.tableData = res.resObj;
+        }
     },
 
     async getCompanyList() {
       let _this = this;
       let {data: res} = await _this.$http.post("api/company/findAll");
-      console.log(res);
-      _this.tableData = res.data;
-      console.log(_this.tableData);
+      _this.tableData = res.resObj;
+      console.log("查询平台",_this.tableData);
     }
 
   },

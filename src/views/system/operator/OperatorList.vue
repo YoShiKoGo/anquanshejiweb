@@ -7,24 +7,27 @@
         width="40%"
     >
       <el-form :rules="rules" ref="addCompany" :model="addCompanyForm" :inline="true">
-        <el-form-item prop="username" label="用户名">
-          <el-input autocomplete="off" size="" v-model="addCompanyForm.username" width="42%"
-                    placeholder="请输入用户名"></el-input>
+        <el-form-item prop="account" label="用户名">
+          <el-input autocomplete="off" size="" v-model="addCompanyForm.account" width="42%"
+                    placeholder="请输入用户名" :disabled=accountIsEdir ></el-input>
         </el-form-item>
-        <el-form-item v-show="!isEdit" prop="password" label="密码">
+        <el-form-item  prop="password" label="密码">
           <el-input autocomplete="off" size="" type="password" v-model="addCompanyForm.password" width="42%"
-                    placeholder="请输入密码"></el-input>
+                    placeholder="请输入密码" show-password></el-input>
         </el-form-item>
-        <el-form-item prop="loginName" label="姓名">
-          <el-input size="" v-model="addCompanyForm.loginName" placeholder="请输入姓名"></el-input>
+        <el-form-item prop="nick_name" label="昵称">
+          <el-input size="" v-model="addCompanyForm.nick_name" placeholder="请输入昵称"></el-input>
         </el-form-item>
-        <el-form-item prop="mobile" label="电话">
-          <el-input size="" v-model="addCompanyForm.mobile" placeholder="请输入电话"></el-input>
+        <el-form-item prop="employee_no" label="工号">
+          <el-input size="" v-model="addCompanyForm.employee_no" placeholder="请输入昵称"></el-input>
+        </el-form-item>
+        <el-form-item prop="mobilePhone" label="手机号">
+          <el-input size="" v-model="addCompanyForm.mobilePhone" placeholder="请输入昵称"></el-input>
         </el-form-item>
         <el-form-item prop="email" label="邮箱">
           <el-input size="" v-model="addCompanyForm.email" placeholder="请输入邮箱"></el-input>
         </el-form-item>
-        <el-form-item prop="role" label="角色" v-show="role==='SYS_ADMIN'&&isEdit">
+        <el-form-item prop="role" label="角色" v-show="role==='ROLE_ADMIN'">
           <el-select v-model="valueRole" placeholder="请选择">
             <el-option
                 v-for="item in optionsRole"
@@ -50,16 +53,16 @@
             <el-select v-model="value" filterable placeholder="请选择" @change="itemChange">
               <el-option
                   v-for="item in options"
-                  :key="item.id"
-                  :label="item.companyName"
-                  :value="item.id">
+                  :key="item._id"
+                  :label="item.platformName"
+                  :value="item._id">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
 
 
-        <el-button v-show="value!==''" class="btn-left" @click="openAddCompany" type="primary" size="" icon="el-icon-plus">新增</el-button>
+        <el-button v-show="value!==''" class="btn-left" @click="openAddCompany" type="primary" size="" icon="el-icon-plus">新增用户</el-button>
       </el-row>
     </el-form>
     <!--数据表格
@@ -74,17 +77,17 @@
         border
         style="width: 100%" size="">
       <el-table-column
-          prop="username"
+          prop="account"
           label="用户名"
+          width="180" >
+      </el-table-column>
+      <el-table-column
+          prop="nick_name"
+          label="昵称"
           width="180">
       </el-table-column>
       <el-table-column
-          prop="loginName"
-          label="姓名"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="mobile"
+          prop="mobilePhone"
           label="电话">
       </el-table-column>
       <el-table-column
@@ -94,6 +97,14 @@
       <el-table-column
           prop="role"
           label="角色">
+      </el-table-column>
+      <el-table-column
+          prop="platformName"
+          label="平台名称">
+      </el-table-column>
+      <el-table-column
+          prop="employee_no"
+          label="工号">
       </el-table-column>
 
       <el-table-column label="操作" width="160" align="center">
@@ -130,6 +141,7 @@ let validateEmail = (rule, value, callback) => {
     callback()
   }
 }
+import JSEncrypt from 'jsencrypt/bin/jsencrypt'
 export default {
 
   name: "company",
@@ -152,11 +164,27 @@ export default {
     return {
       /*表单验证*/
       rules: {
-        username: [
+        account: [
           {
             required: true,
             trigger: 'change',
             message: '请输入用户名'
+          },
+
+        ],
+        nick_name: [
+          {
+            required: true,
+            trigger: 'change',
+            message: '请输入昵称'
+          },
+
+        ],
+        employee_no: [
+          {
+            required: true,
+            trigger: 'change',
+            message: '请输入工号'
           },
 
         ],
@@ -171,7 +199,7 @@ export default {
           {
             required: true,
             trigger: 'change',
-            message: '请输入用户名'
+            message: '请输入'
           }
         ],
         email: [
@@ -185,7 +213,7 @@ export default {
             trigger: 'blur'
           }
         ],
-        mobile: [
+        mobilePhone: [
           {
             required: true,
             trigger: 'change',
@@ -200,43 +228,46 @@ export default {
       //判断是否是点击的编辑
       isEdit: false,
       //公司id保证当前添加更改用户时存入公司id
-      companyId: '',
+      platformId: '',
 
       optionsRole: [
         {
-          value: 'ADMIN',
+          value: '公司管理员',
           label: '公司管理员'
         }, {
-          value: 'USER',
-          label: '操作员'
+          value: '普通操作员',
+          label: '普通操作员'
         },],
-      valueRole: '',
+      valueRole: '普通操作员',
       //当前用户的权限
       role: sessionStorage.getItem("role"),
       options: [],
       value: '',
       //添加用户的数据
       addCompanyForm: {
-        username: '',
+        account: '',
         password: '',
-        mobile: '',
+        nick_name:'',
+        employee_no:'',
+        mobilePhone: '',
         email: '',
         loginName: '',
         role: '',
         id: ''
-
       },
       //编辑公司的数据
       editCompanyForm: {
-        companyName: '',
+        platformName: '',
         des: ''
       },
       //对话框标题
       dialogTitle: '',
+      //用户名能否修改
+      accountIsEdir:'',
       //对话框显示状态
       visible: false,
       companyForm: {
-        companyName: ''
+        platformName: ''
       },
       tableHeight: window.innerHeight - 250,
       //用户列表
@@ -248,16 +279,14 @@ export default {
   methods: {
     //点击下拉框事件
     async itemChange() {
+      let _this = this;
       //value为公司的id
-      let id = this.value;
-      let formData = new FormData()
-      formData.append("companyId", id)
-      formData.append("userId", sessionStorage.getItem("userId"))
-      console.log(sessionStorage.getItem("userId"))
-      let {data: res} = await this.$http.post("/api/user/findByCompanyId", formData);
+      let formData = new FormData
+      formData.append("platformId", _this.value);
+      let {data: res} = await this.$http.post("/api/user/getUsersByPlatForm", formData);
       console.log(res);
-      this.tableData = res.data;
-      this.companyId = id;
+      this.tableData = res.resObj;
+      this.platformId = _this.value;
       console.log(this.tableData)
     },
     //删除按钮
@@ -271,23 +300,22 @@ export default {
           .then(async () => {
 
             let formData = new FormData
-            formData.append("id", row.id);
-            formData.append("opId", sessionStorage.getItem("userName"));
+            formData.append("_id", row._id);
             console.log(row.id);
             let {data: res} = await _this.$http.post(
-                "/api/user/deleteById",
+                "/api/admin/delUser",
                 formData
             );
-            if (res.code === 200) {
+            if (res.resCode === "1") {
               _this.$message({
-                message: res.msg,
+                message: res.resMsg,
                 type: "success"
               });
               _this.getCompanyList();
-              _this.itemChange();
+              _this.getAllUser();
             } else {
               _this.$message({
-                message: res.msg,
+                message: res.resMsg,
                 type: "error"
               });
             }
@@ -296,19 +324,24 @@ export default {
     //编辑按钮
     editRow(row) {
       this.isEdit = true;
-      this.dialogTitle = '修改用户平台'
+      this.accountIsEdir = true;
+      this.dialogTitle = '修改用户信息'
       this.visible = true;
       console.log(row);
-      this.addCompanyForm.username = row.username;
-      this.addCompanyForm.loginName = row.loginName
-      this.addCompanyForm.mobile = row.mobile
-      this.addCompanyForm.email = row.email
-      this.addCompanyForm.id = row.id;
+      this.addCompanyForm.account = row.account;
+      this.addCompanyForm.password = row.password
+      this.addCompanyForm.nick_name = row.nick_name
+      this.addCompanyForm.employee_no = row.employee_no
+      this.addCompanyForm.mobilePhone = row.mobilePhone;
+      this.addCompanyForm.email = row.email;
+      this.addCompanyForm.id = row._id;
+      this.addCompanyForm.platformId = row.platformId;
       this.valueRole = row.role;
     },
     /*点击新建按钮*/
     openAddCompany() {
       this.isEdit = false;
+      this.accountIsEdir = false;
       this.resetForm("addCompany")
       this.dialogTitle = '添加用户'
       this.visible = true;
@@ -332,7 +365,7 @@ export default {
         });
         //编辑
       } else {
-        console.log(_this.valueRole);
+        //console.log(_this.valueRole);
         this.editUser()
       }
       _this.visible = false;
@@ -340,29 +373,33 @@ export default {
 
     //编辑用户
     async editUser() {
-      let parm = {
-        username: this.addCompanyForm.username,
-        loginName: this.addCompanyForm.loginName,
-        mobile: this.addCompanyForm.mobile,
+      let user = {
+        account: this.addCompanyForm.account,
+        //password: this.addCompanyForm.password,
+        nick_name: this.addCompanyForm.nick_name,
+        employee_no: this.addCompanyForm.employee_no,
+        mobilePhone: this.addCompanyForm.mobilePhone,
         email: this.addCompanyForm.email,
         role: this.valueRole,
-        companyId: this.companyId,
-        id: this.addCompanyForm.id,
+        platformId: this.addCompanyForm.platformId,
+        _id: this.addCompanyForm.id,
         opUser:sessionStorage.getItem("userName")
       };
-      console.log(parm);
-      let {data: resAdd} = await this.$http.post("api/user/update", parm);
-      console.log(resAdd);
-      if (resAdd.code === 200) {
+      console.log(this.addCompanyForm);
+      let {data: resAdd} = await this.$http.post("api/admin/updateUser", user);
+      //console.log("zheer",resAdd);
+      if (resAdd.resCode === "1000") {
         //信息提示
         this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: 'success'
         });
-        this.itemChange();
+        this.getCompanyList();
+        this.getAllUser();
+        //this.itemChange();
       } else {
         this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: "error"
         });
       }
@@ -370,58 +407,72 @@ export default {
 
     //添加用户
     async addUser() {
-      let parm = {
-        username: this.addCompanyForm.username,
-        password: this.addCompanyForm.password,
-        loginName: this.addCompanyForm.loginName,
-        mobile: this.addCompanyForm.mobile,
+      let p = sessionStorage.getItem('publicKey');
+      let encryptor = new JSEncrypt() // 新建JSEncrypt对象
+      encryptor.setPublicKey(p) // 设置公钥
+      var pwd = encryptor.encrypt(this.addCompanyForm.password)//加密密码
+      let user = {
+        account: this.addCompanyForm.account,
+        password: pwd,
+        nick_name: this.addCompanyForm.nick_name,
+        employee_no: this.addCompanyForm.employee_no,
+        mobilePhone: this.addCompanyForm.mobilePhone,
         email: this.addCompanyForm.email,
-        companyId: this.companyId,
         role: this.valueRole,
+        platformId: this.platformId,
         opUser: sessionStorage.getItem("userName")
       }
-      let {data: resAdd} = await this.$http.post("api/user/addUser", parm);
-      if (resAdd.code === 200) {
+      //console.log(user)
+      let {data: resAdd} = await this.$http.post("api/admin/addUser", user);
+      console.log(resAdd)
+      if (resAdd.resCode === "1000") {
         //信息提示
         this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: 'success'
         });
         this.itemChange();
 
       } else {
         this.$message({
-          message: resAdd.msg,
+          message: resAdd.resMsg,
           type: "error"
         });
       }
     },
     //查询公司
-    async selectByCompanyName() {
+    async selectByplatformName() {
       let _this = this;
-      let companyName = this.companyForm.companyName;
+      let platformName = this.companyForm.platformName;
       let formData = new FormData()
-      formData.append('companyName', companyName)
-      let {data: res} = await _this.$http.post("api/company/findByCompanyName", formData);
+      formData.append('platformName', platformName)
+      let {data: res} = await _this.$http.post("api/company/findByplatformName", formData);
       _this.tableData = [];
       if (res.data !== null) {
-        _this.tableData[0] = res.data;
+        _this.tableData[0] = res.resObj;
       }
     },
-
+    async getAllUser() {
+      let _this = this;
+      //console.log("所有用户");
+      let {data: res} = await _this.$http.post("api/admin/userAll");
+      //console.log("所有用户",res)
+      this.tableData = res.resObj;
+      //console.log(res.resObj)
+    },
     //获取公司列表
     async getCompanyList() {
-      if (sessionStorage.getItem("role") === 'SYS_ADMIN') {
+      //console.log("获取公司列表");
+      if (sessionStorage.getItem("role") === 'ROLE_ADMIN') {
         let {data: res} = await this.$http.post('api/company/findAll');
-        this.options = res.data
-        console.log(res);
+        this.options = res.resObj
       } else {
-        let formData = new FormData();
-        formData.append("userId",sessionStorage.getItem("userId"))
-        let {data: res} = await this.$http.post('api/company/findByUserId',formData);
-        console.log(res);
-        this.options = res.data
-        console.log(this.options)
+        //let formData = new FormData();
+        //formData.append("userId",sessionStorage.getItem("userId"))
+        let {data: res} = await this.$http.post('api/company/getPlatformByUser');
+        //console.log("平台列表",res);
+        this.options = [res.resObj]
+        //console.log(this.options)
       }
     },
     /**
@@ -435,9 +486,11 @@ export default {
 
   },
 
-  mounted() {
+   mounted() {
     //在页面加载时，获取公司列表
     this.getCompanyList();
+    this.getAllUser();
+
 
   },
 
