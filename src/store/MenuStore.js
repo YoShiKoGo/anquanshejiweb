@@ -15,7 +15,9 @@ export default {
                 name: 'desktop'
             }
         ],
-        menu_data: []
+        menu_data: [
+
+        ]
     },
     mutations: {
         //菜单点击时调用

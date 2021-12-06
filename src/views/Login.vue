@@ -40,8 +40,11 @@
           <el-col :span="12">
             <el-button class="my-button" type="primary" @keyup.enter="onSubmit" @click="onSubmit">登录</el-button>
           </el-col>
+<!--          <el-col :span="12">-->
+<!--            <el-button class="my-button" @click="clearAll">重置</el-button>-->
+<!--          </el-col>-->
           <el-col :span="12">
-            <el-button class="my-button" @click="clearAll">重置</el-button>
+            <el-button class="my-button" @click="regist">注册</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -159,27 +162,49 @@ export default {
 
               if (res.resCode === "1000") {
                 console.log(res);
-                let role = res.resObj.role;
-                let menuList = this.getMenuList(role);
-                let routerList = this.getRouterList(role);
-
-                //保存菜单数据
-                sessionStorage.setItem("menuList", JSON.stringify(menuList));
-                //保存路由数据
-                sessionStorage.setItem("routerList", JSON.stringify(routerList));
+                console.log("登录成功！！")
                 sessionStorage.setItem("userId", res.resObj._id);
                 sessionStorage.setItem("userName", res.resObj.nick_name);
+                console.log(res.resObj.nick_name)
                 sessionStorage.setItem("role", res.resObj.role);
                 sessionStorage.setItem("lastLoginTime", res.resObj.lastLogin_time);
+                sessionStorage.setItem("userinfo", res.resObj);
                 this.$message({
                   message: res.resMsg,
                   type: 'success'
                 });
-                console.log(sessionStorage)
+
+                this.$router.push('/homeView');
+
+
+                // let role = res.resObj.role;
+                // let menuList = this.getMenuList(role);
+                // let routerList = this.getRouterList(role);
+                //
+                //
+                // console.log(menuList)
+                // console.log("--------------------")
+                //
+                // console.log(routerList)
+                //
+                // //保存菜单数据
+                // sessionStorage.setItem("menuList", JSON.stringify(menuList));
+                // //保存路由数据
+                // sessionStorage.setItem("routerList", JSON.stringify(routerList));
+                // sessionStorage.setItem("userId", res.resObj._id);
+                // sessionStorage.setItem("userName", res.resObj.nick_name);
+                // sessionStorage.setItem("role", res.resObj.role);
+                // sessionStorage.setItem("lastLoginTime", res.resObj.lastLogin_time);
+                // this.$message({
+                //   message: res.resMsg,
+                //   type: 'success'
+                // });
+                //
+                // console.log(sessionStorage)
                 //动态生成路由
-                this.$store.commit("getMenuList", this.$router);
-                this.$router.push({path: '/desktop'});
+
                 /*else为登录失败*/
+
               } else {
                 /*显示提示框，设置提示信息*/
                 this.$message.error(res.resMsg);
@@ -195,10 +220,13 @@ export default {
     },
     //根据权限获取菜单
     getMenuList(role) {
+      console.log('根据权限获取菜单')
+      console.log(role)
       // eslint-disable-next-line no-unused-vars
       let menuList = [];
       //console.log("存入路由")
       if (role === "ROLE_ADMIN") {
+        console.log('是ROLE_ADMIN--------------')
         return menuList = [
           {
             children: "",
@@ -207,7 +235,7 @@ export default {
             icon: "el-icon-receiving",
             id: 48,
             isHome: 0,
-            label: "个人信息",
+            label: "修改密码",
             name: "desktop",
             orderNum: 3,
             parentId: 0,
@@ -216,99 +244,21 @@ export default {
             updateTime: 1586684441000
           },
           {
-            children: [
-              {
-                children: [],
-                code: "company:dept",
-                createTime: 1586703509000,
-                icon: "el-icon-copy-document",
-                id: 33,
-                isHome: 0,
-                label: "公司平台管理",
-                name: "CompanyList",
-                orderNum: 2,
-                parentId: 17,
-                path: "/companyList",
-                type: "1",
-                updateTime: 1586337139000,
-                url: "/system/Department/DepartmentList"
-              },
-              {
-                children: [],
-                code: "company:user",
-                createTime: 1691464271000,
-                icon: "el-icon-s-custom",
-                id: 18,
-                isHome: 0,
-                label: "平台操作员管理",
-                name: "OperatorList",
-                orderNum: 3,
-                parentId: 17,
-                path: "/operatorList",
-                type: "1",
-                updateTime: 1691565988000,
-                url: "/system/User/UserList"
-              },
-            ],
-            code: "company:manage",
-            createTime: 1691464271000,
-            icon: "el-icon-document",
-            id: 17,
-            isHome: 0,
-            label: "系统管理",
-            orderNum: 1,
-            parentId: 0,
-            path: "/system",
-            type: "0",
-            updateTime: 1691565988000
-          },
-          {
-            children: [
-              {
-                children: [],
-                code: "company:goodsCategory",
-                createTime: 1586703272000,
-                icon: "el-icon-s-data",
-                id: 36,
-                isHome: 0,
-                label: "登录次数统计",
-                name: "LoginCount",
-                orderNum: 1,
-                parentId: 34,
-                path: "/loginCount",
-                type: "1",
-                updateTime: 1586683590000,
-                url: "/goods/goodsCategory/goodsCategoryList"
-              }
-            ],
-            code: "company:goods",
-            createTime: 1586702987000,
-            icon: "el-icon-user",
-            id: 34,
-            isHome: 0,
-            label: "用户管理",
-            name: "",
-            orderNum: 2,
-            parentId: 0,
-            path: "/goods",
-            type: "0",
-            updateTime: 1586683323000
-          },
-          {
             children: "",
             code: "company:systenConfig",
             createTime: 1586703003000,
             icon: "el-icon-receiving",
-            id: 42,
+            id: 48,
             isHome: 0,
-            label: "日志管理",
-            name: "LogList",
+            label: "修改常旅客",
+            name: "desktop",
             orderNum: 3,
             parentId: 0,
-            path: "/logList",
+            path: "/list",
+            url: "/system/User/UserList",
             type: "0",
             updateTime: 1586684441000
-          }
+          },
         ]
       } else if (role === "ROLE_COMPANY") {
         return menuList = [
@@ -404,7 +354,6 @@ export default {
             "parentId": "3",
             "path": "/companyList",
             "type": "1",
-            "url": "/system/company/CompanyList"
           },
           {
             "children": [],
@@ -418,35 +367,6 @@ export default {
             "parentId": "3",
             "path": "/operatorList",
             "type": "1",
-            "url": "/system/operator/OperatorList"
-          },
-          {
-            "children": [],
-            "code": "company:goodsCategory",
-            "icon": "el-icon-s-data",
-            "id": 4,
-            "isHome": 0,
-            "label": "登录次数统计",
-            "name": "LoginCount",
-            "orderNum": 2,
-            "parentId": "5",
-            "path": "/loginCount",
-            "type": "1",
-            "url": "/user/LoginCount"
-          },
-          {
-            "children": [],
-            "code": "company:systenConfig",
-            "icon": "el-icon-receiving",
-            "id": 6,
-            "isHome": 0,
-            "label": "日志管理",
-            "name": "LogList",
-            "orderNum": 1,
-            "parentId": "0",
-            "path": "/logList",
-            "type": "1",
-            "url": "/log/LogList"
           }
         ]
       } else if (role === "ROLE_COMPANY") {
@@ -487,6 +407,12 @@ export default {
       this.loginForm.username = '';
       this.loginForm.password = '';
       this.loginForm.verifyCode = '';
+    },
+
+    // 注册
+    regist(){
+      console.log("去注册")
+      this.$router.push({path: '/register'});
     }
 
   }

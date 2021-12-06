@@ -36,15 +36,15 @@ router.beforeEach((to, from, next) => {
 //to 即将进入的路由
 //from 即将离开的路由
 //设置tabs数据
-    store.commit('getTabs');
+//     store.commit('getTabs');
 //设置激活选项卡
-    store.commit('setActiveTabs', to.name);
+//     store.commit('setActiveTabs', to.name);
     //解决页面刷新之后菜单不存在问题
     // eslint-disable-next-line no-empty,no-unused-vars
     let userId = sessionStorage.getItem("userId");
-    if (to.path === '/') {
+    if (to.path === '/' || to.path === '/register') {
         if (userId) {
-            next({path: '/home'});
+            next({path: '/homeView'});
         } else {
             next();
         }
@@ -53,15 +53,17 @@ router.beforeEach((to, from, next) => {
         if (!userId && to.name !== 'login') {
             next({path: '/'});
         } else {
-            //若菜单数据不存在，则存入
-            if (store.state.MenuStore.menu_data.length === 0) {
-                store.commit('getMenuList', router);
-                next({path: to.path});
-            } else {
-                next(); //继续往下执行
-            }
+            // //若菜单数据不存在，则存入
+            // if (store.state.MenuStore.menu_data.length === 0) {
+            //     store.commit('getMenuList', router);
+            //     next({path: to.path});
+            // } else {
+            //     next(); //继续往下执行
+            // }
+          next();
         }
     }
+
 });
 
 new Vue({
